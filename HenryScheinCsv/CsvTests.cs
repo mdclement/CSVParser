@@ -17,13 +17,22 @@ namespace HenryScheinCsv
             Assert.That(parsed.Count(), Is.EqualTo(1));
             Assert.That(parsed[0], Is.EqualTo(string.Empty));
         }
+
+        [Test]
+        public void OneSimpleValueNoQuotesTest()
+        {
+            var parser = new CsvParser();
+            var parsed = parser.Parse("42");
+            Assert.That(parsed.Count(), Is.EqualTo(1));
+            Assert.That(parsed[0], Is.EqualTo("42"));
+        }
     }
 
     public class CsvParser
     {
         public IList<string> Parse(string stringToParse)
         {
-            return new List<string> {string.Empty};
+            return new List<string> {stringToParse};
         }
     }
 }
