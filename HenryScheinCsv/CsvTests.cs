@@ -45,6 +45,16 @@ namespace HenryScheinCsv
             Assert.That(parsed[0], Is.EqualTo("24"));
             Assert.That(parsed[1], Is.EqualTo("42"));
         }
+
+        [Test]
+        public void TwoSimpleValuesQuotesTest()
+        {
+            var parser = new CsvParser();
+            var parsed = parser.Parse("\"24\",\"42\"");
+            Assert.That(parsed.Count(), Is.EqualTo(2));
+            Assert.That(parsed[0], Is.EqualTo("24"));
+            Assert.That(parsed[1], Is.EqualTo("42"));
+        }
     }
 
     public class CsvParser
