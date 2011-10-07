@@ -23,7 +23,7 @@ namespace HenryScheinCsv
     {
         public IList<string> Parse(string stringToParse)
         {
-            throw new NotImplementedException();
+            return new List<string> {string.Empty};
         }
     }
 }
