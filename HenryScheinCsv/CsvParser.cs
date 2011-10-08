@@ -47,6 +47,10 @@ namespace HenryScheinCsv
                     returnList.Add(currentList);
                     currentList = new List<string>();
                 }
+                else if (CarriageReturn(currentChar, inQuotes))
+                {
+                    // ignore carriage returns
+                }
                 else
                 {
                     currentValue.Append(currentChar);
@@ -55,6 +59,11 @@ namespace HenryScheinCsv
             currentList.Add(currentValue.ToString());
             returnList.Add(currentList);
             return returnList;
+        }
+
+        private bool CarriageReturn(char currentChar, bool inQuotes)
+        {
+            return !inQuotes && currentChar == '\r';
         }
 
         private static bool EndOfLine(char currentChar, bool inQuotes)

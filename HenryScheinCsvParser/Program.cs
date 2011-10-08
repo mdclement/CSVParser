@@ -11,21 +11,38 @@ namespace HenryScheinCsvParser
     {
         static void Main(string[] args)
         {
-            if (args.Length != 1)
+            if (args.Length != 2 && args.Length != 0)
             {
-                Console.WriteLine("need one parameter: file name to parse");
+                Console.WriteLine("need two parameters: file name to parse, file name to export");
                 return;
             }
-            if (!File.Exists(args[0]))
+            string inputFilePath = "input.txt";
+            string exportFilePath = "output.txt";
+
+            if (args.Length == 2)
             {
-                Console.WriteLine("{0} (input file) doesn't exist", args[0]);
+                inputFilePath = args[0];
+                exportFilePath = args[1];
             }
-            using (StreamReader reader = new StreamReader(args[0]))
+
+            if (!File.Exists(inputFilePath))
             {
-                var inputString = reader.ReadToEnd();
-                CsvParser parser = new CsvParser();
-                var parsedValues = parser.Parse(inputString);
+                Console.WriteLine("{0} (input file) doesn't exist", inputFilePath);
             }
+
+            string inputString;
+            using (var reader = new StreamReader(inputFilePath))
+            {
+                inputString = reader.ReadToEnd();
+            }
+            var parser = new CsvParser();
+            IList<IList<string>> parsedValues = parser.Parse(inputString);
+            string outputString = parser.PrepForExport(parsedValues);
+            using (var writer = new StreamWriter(exportFilePath))
+            {
+                writer.Write(outputString);
+            }
+
         }
     }
 }

@@ -121,6 +121,20 @@ namespace HenryScheinCsv
         }
 
         [Test]
+        public void WithCarriageReturnNewLineTest()
+        {
+            var parser = new CsvParser();
+            var parsed = parser.Parse("12,34\r\n56,78");
+            Assert.That(parsed.Count(), Is.EqualTo(2));
+            Assert.That(parsed[0].Count(), Is.EqualTo(2));
+            Assert.That(parsed[1].Count(), Is.EqualTo(2));
+            Assert.That(parsed[0][0], Is.EqualTo("12"));
+            Assert.That(parsed[0][1], Is.EqualTo("34"));
+            Assert.That(parsed[1][0], Is.EqualTo("56"));
+            Assert.That(parsed[1][1], Is.EqualTo("78"));
+        }
+
+        [Test]
         public void WithNewLineInValueTest()
         {
             var parser = new CsvParser();
