@@ -55,19 +55,15 @@ namespace HenryScheinCsv
             Assert.That(parsed[0], Is.EqualTo("24"));
             Assert.That(parsed[1], Is.EqualTo("42"));
         }
-    }
 
-    public class CsvParser
-    {
-        public IList<string> Parse(string stringToParse)
+        [Test]
+        public void OneCommaValueQuotesTest()
         {
-            IList<string> returnList = new List<string>();
-            string[] splitString = stringToParse.Split(',');
-            foreach (string partString in splitString)
-            {
-                returnList.Add(partString.Trim('"'));
-            }
-            return returnList;
+            var parser = new CsvParser();
+            var parsed = parser.Parse("\"4,2\"");
+            Assert.That(parsed.Count(), Is.EqualTo(1));
+            Assert.That(parsed[0], Is.EqualTo("4,2"));
         }
-    }
+
+}
 }
