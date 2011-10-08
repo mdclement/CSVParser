@@ -65,5 +65,14 @@ namespace HenryScheinCsv
             Assert.That(parsed[0], Is.EqualTo("4,2"));
         }
 
+        [Test]
+        public void TwoCommaValueQuotesTest()
+        {
+            var parser = new CsvParser();
+            var parsed = parser.Parse("\"4,2\",\"2,4\"");
+            Assert.That(parsed.Count(), Is.EqualTo(2));
+            Assert.That(parsed[0], Is.EqualTo("4,2"));
+            Assert.That(parsed[1], Is.EqualTo("2,4"));
+        }
 }
 }
