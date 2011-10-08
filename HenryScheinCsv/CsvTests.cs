@@ -133,5 +133,16 @@ namespace HenryScheinCsv
             Assert.That(parsed[1][0], Is.EqualTo("56"));
             Assert.That(parsed[1][1], Is.EqualTo("78"));
         }
+
+        [Test]
+        public void PrepForExportTest()
+        {
+            IList<IList<string>> testValues = new List<IList<string>>
+                                                  {new List<string> {"abc", "42"}, 
+                                                   new List<string> {"34", "def"}};
+            var parser = new CsvParser();
+            string outputString = parser.PrepForExport(testValues);
+            Assert.That(outputString, Is.EqualTo("[abc] [42]\n[34] [def]"));
+        }
     }
 }

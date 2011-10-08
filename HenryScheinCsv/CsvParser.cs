@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace HenryScheinCsv
@@ -79,6 +80,16 @@ namespace HenryScheinCsv
         private static bool EndOfValue(char currentChar, bool inQuotes)
         {
             return !inQuotes && currentChar == delimiter;
+        }
+
+        public string PrepForExport(IList<IList<string>> values)
+        {
+            IList<string> lines = values.
+                Select(valueLine => valueLine.
+                    Select(x => string.Format("[{0}]", x))).
+                        Select(bracketedList => string.Join(" ", bracketedList.ToArray())).ToList();
+            string finalOutput = string.Join("\n", lines.ToArray());
+            return finalOutput;
         }
     }
 }
