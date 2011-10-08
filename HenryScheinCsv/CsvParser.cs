@@ -5,33 +5,80 @@ namespace HenryScheinCsv
 {
     public class CsvParser
     {
-        public IList<string> Parse(string stringToParse)
+        private const char delimiter = ',';
+
+        public IList<IList<string>> Parse(string stringToParse)
         {
-            IList<string> returnList = new List<string>();
+            IList<IList<string>> returnList = new List<IList<string>>();
+            IList<string> currentList = new List<string>();
             bool inQuotes = false;
-            StringBuilder currentValue = new StringBuilder();
-            foreach (var currentChar in stringToParse)
+            var currentValue = new StringBuilder();
+            for (int i = 0; i < stringToParse.Length; i++)
             {
-                if (!inQuotes && currentChar == ',')
+                char currentChar = stringToParse[i];
+                char nextChar = ' ';
+                if (i + 1 < stringToParse.Length)
                 {
-                    returnList.Add(currentValue.ToString());
+                    nextChar = stringToParse[i + 1];
+                }
+                if (EndOfValue(currentChar, inQuotes))
+                {
+                    currentList.Add(currentValue.ToString());
                     currentValue = new StringBuilder();
                 }
-                else if (!inQuotes && currentChar == '\"')
+                else if (StartQuotes(currentChar, inQuotes))
                 {
                     inQuotes = true;
                 }
-                else if (inQuotes && currentChar == '\"')
+                else if (EndQuotes(currentChar, nextChar, inQuotes))
                 {
                     inQuotes = false;
+                }
+                else if (DoubleQuotesInQuotes(currentChar, nextChar, inQuotes))
+                {
+                    currentValue.Append(currentChar);
+                    i++;
+                }
+                else if (EndOfLine(currentChar, inQuotes))
+                {
+                    currentList.Add(currentValue.ToString());
+                    currentValue = new StringBuilder();
+                    returnList.Add(currentList);
+                    currentList = new List<string>();
                 }
                 else
                 {
                     currentValue.Append(currentChar);
                 }
             }
-            returnList.Add(currentValue.ToString().Trim('"'));
+            currentList.Add(currentValue.ToString());
+            returnList.Add(currentList);
             return returnList;
+        }
+
+        private static bool EndOfLine(char currentChar, bool inQuotes)
+        {
+            return !inQuotes && currentChar == '\n';
+        }
+
+        private static bool DoubleQuotesInQuotes(char currentChar, char nextChar, bool inQuotes)
+        {
+            return inQuotes && currentChar == '\"' && nextChar == '\"';
+        }
+
+        private bool EndQuotes(char currentChar, char nextChar, bool inQuotes)
+        {
+            return inQuotes && currentChar == '\"' && nextChar != '\"';
+        }
+
+        private static bool StartQuotes(char currentChar, bool inQuotes)
+        {
+            return !inQuotes && currentChar == '\"';
+        }
+
+        private static bool EndOfValue(char currentChar, bool inQuotes)
+        {
+            return !inQuotes && currentChar == delimiter;
         }
     }
 }
